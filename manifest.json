@@ -1,22 +1,25 @@
 {
   "name": "Gestor de Finanzas Personales",
   "short_name": "FinanzasApp",
-  "description": "Aplicación web para gestión de finanzas personales, presupuestos y control de gastos.",
+  "description": "Administra ingresos, gastos y presupuestos personales desde cualquier dispositivo.",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#1f4e79",
   "theme_color": "#1f4e79",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2845/2845722.png",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%231e3a8a'/%3E%3Cpath d='M112 168h288a32 32 0 0 1 32 32v152a40 40 0 0 1-40 40H120a40 40 0 0 1-40-40V192a24 24 0 0 1 24-24zm16 72v32h80v-32zm208 24a24 24 0 1 0 0 48 24 24 0 0 0 0-48zM128 112h232v32H128z' fill='white'/%3E%3C/svg%3E",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/svg+xml",
+      "purpose": "any"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2845/2845722.png",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%231e3a8a'/%3E%3Cpath d='M112 168h288a32 32 0 0 1 32 32v152a40 40 0 0 1-40 40H120a40 40 0 0 1-40-40V192a24 24 0 0 1 24-24zm16 72v32h80v-32zm208 24a24 24 0 1 0 0 48 24 24 0 0 0 0-48zM128 112h232v32H128z' fill='white'/%3E%3C/svg%3E",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }

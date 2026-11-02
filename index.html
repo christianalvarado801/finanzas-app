@@ -40,10 +40,85 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        input, select, button { -webkit-tap-highlight-color: transparent; }
+        :focus-visible { outline: 3px solid #60a5fa; outline-offset: 2px; }
+        @media (max-width: 640px) {
+            #auth-view { align-items: flex-start; padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom)); }
+            #auth-view > div { padding: 1.5rem; margin: auto 0; }
+            #toast-container { left: 1rem; right: 1rem; bottom: calc(5rem + env(safe-area-inset-bottom)); }
+            #toast-container > div { width: 100%; }
+            main { padding-bottom: calc(6rem + env(safe-area-inset-bottom)) !important; }
+            header > div:first-child > div { min-height: 3.5rem; gap: .5rem; }
+            header > div:first-child > div > div:first-child { gap: .5rem; }
+            header > div:first-child > div > div:last-child { gap: .25rem; }
+            header > div:first-child > div > div:last-child > button:first-child { padding: .55rem .65rem; }
+            header > div:first-child > div > div:last-child > button:first-child .desktop-label { display: none; }
+            header > div:first-child > div > div:last-child > button:first-child .mobile-label { display: inline; }
+            header > div:first-child > div > div:last-child > div { padding-left: .4rem; }
+            header > div:first-child > div > div:last-child > div button { padding: .4rem; }
+            .mobile-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 35; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -8px 24px rgb(15 23 42 / .08); }
+            .mobile-nav button { min-width: 0; flex: 1; font-size: 10px; }
+            .mobile-nav button span { white-space: nowrap; }
+            .modal-panel { max-height: calc(100dvh - 2rem - env(safe-area-inset-top)); overflow-y: auto; }
+        }
         .tab-active {
             border-bottom: 2px solid #2563eb;
             color: #2563eb;
             font-weight: 600;
+        }
+        /* Product polish */
+        body { background: #f5f7fb; }
+        #app-view > header { background: rgb(255 255 255 / .92); backdrop-filter: blur(16px); }
+        #app-view > main { padding-top: 2rem; }
+        #app-view section:not(.hidden) { animation: page-enter .24s ease-out; }
+        @keyframes page-enter { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        #app-view main .bg-white { box-shadow: 0 4px 18px rgb(15 23 42 / .035); }
+        #app-view main .bg-white:hover { border-color: #dbe3ef; }
+        #app-view main input, #app-view main select { min-height: 42px; }
+        #page-heading { margin-bottom: 1.75rem; }
+        #page-heading h1 { letter-spacing: -.035em; }
+        .tab-button { position: relative; transition: color .18s ease; }
+        .tab-button.tab-active { border-bottom-color: transparent; }
+        .tab-button.tab-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px 2px 0 0; background: #2563eb; }
+        .mobile-label { display: none; }
+        #auth-view { background-image: radial-gradient(ellipse at 20% 15%, rgb(59 130 246 / .3), transparent 38%), linear-gradient(135deg, #0f172a, #172554 55%, #1e3a8a); }
+        #auth-view > div { box-shadow: 0 32px 90px rgb(2 6 23 / .32); }
+        #auth-view input { min-height: 46px; }
+        #toast-container { max-width: min(24rem, calc(100vw - 2rem)); }
+        @media (max-width: 767px) {
+            #app-view > main { padding: 1.25rem 1rem calc(6.5rem + env(safe-area-inset-bottom)) !important; }
+            #page-heading { margin: .25rem 0 1.25rem; }
+            #page-heading h1 { font-size: 1.55rem; }
+            #view-dashboard, #view-transactions, #view-budgets, #view-analytics { gap: 1rem; }
+            #view-dashboard .grid, #view-analytics .grid { gap: 1rem; }
+            #view-dashboard [class*="rounded-2xl"], #view-analytics [class*="rounded-2xl"] { border-radius: 1.15rem; }
+            #view-dashboard .p-6, #view-analytics .p-6, #view-budgets .p-6 { padding: 1.1rem; }
+            #view-dashboard h3 { font-size: 1rem; }
+            #kpi-balance { font-size: 1.8rem; }
+            #app-view > header { position: sticky; top: 0; }
+            #app-view > header > div:first-child > div { height: 3.65rem; }
+            #app-view > header > div:first-child > div > div:first-child > div:first-child { width: 2.25rem; height: 2.25rem; border-radius: .75rem; }
+            #app-view > header > div:first-child > div > div:first-child > div:last-child > span:first-child { font-size: 1.05rem; }
+            .mobile-nav { min-height: 4rem; padding: .45rem .35rem calc(.45rem + env(safe-area-inset-bottom)); }
+            .mobile-nav button { gap: .15rem; border-radius: .8rem; padding: .4rem .15rem; color: #64748b; transition: background .15s ease, color .15s ease; }
+            .mobile-nav button[aria-current="page"] { color: #1d4ed8; background: #eff6ff; font-weight: 600; }
+            .mobile-nav button span { font-size: 9px; letter-spacing: -.01em; }
+            .mobile-nav button svg { width: 1.2rem; height: 1.2rem; }
+            #view-transactions > div:first-child { padding: 1rem; }
+            #view-transactions .overflow-x-auto { overscroll-behavior-x: contain; scrollbar-width: thin; }
+            #view-transactions table { min-width: 690px; }
+            #view-dashboard .overflow-x-auto table { min-width: 440px; }
+            #view-analytics .relative.h-64 { height: 14rem; }
+            #budget-alerts-container > div { align-items: flex-start; gap: .75rem; padding: .85rem; }
+            #budget-alerts-container > div > div { min-width: 0; }
+            #budget-alerts-container button { flex-shrink: 0; }
+            footer { padding-bottom: calc(5rem + env(safe-area-inset-bottom)) !important; }
+        }
+        @media (max-width: 360px) {
+            #app-view > header .mobile-label { display: none; }
+            #app-view > header > div:first-child { padding-left: .65rem; padding-right: .65rem; }
+            #app-view > header > div:first-child > div > div:last-child { gap: .1rem; }
+            #view-dashboard #kpi-balance { font-size: 1.55rem; }
         }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -69,7 +144,7 @@
             </div>
 
             <!-- Auth Tabs (Login / Register) -->
-            <div class="flex bg-slate-100 p-1 rounded-2xl">
+            <div class="flex bg-slate-100 p-1 rounded-2xl" role="tablist" aria-label="Acceso a FinanzasPro">
                 <button id="auth-tab-login" onclick="toggleAuthTab('login')" class="flex-1 py-2 text-xs font-semibold rounded-xl bg-white text-slate-900 shadow-sm transition-all">
                     Iniciar Sesión
                 </button>
@@ -86,7 +161,7 @@
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pointer-events-none">
                             <i data-lucide="mail" class="w-4 h-4"></i>
                         </span>
-                        <input type="email" id="login-email" required placeholder="usuario@universidad.edu.co" class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <input type="email" id="login-email" required autocomplete="username" inputmode="email" placeholder="usuario@universidad.edu.co" class="w-full pl-9 pr-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
                 </div>
                 <div>
@@ -95,7 +170,8 @@
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pointer-events-none">
                             <i data-lucide="lock" class="w-4 h-4"></i>
                         </span>
-                        <input type="password" id="login-password" required placeholder="••••••••" class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <input type="password" id="login-password" required autocomplete="current-password" placeholder="Tu contraseña" class="w-full pl-9 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <button type="button" onclick="togglePassword('login-password', this)" aria-label="Mostrar contraseña" class="absolute inset-y-0 right-0 px-3 text-slate-400"><i data-lucide="eye" class="w-4 h-4"></i></button>
                     </div>
                 </div>
                 <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-xs shadow-md shadow-brand-600/30 transition-all transform active:scale-98">
@@ -111,7 +187,7 @@
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pointer-events-none">
                             <i data-lucide="user" class="w-4 h-4"></i>
                         </span>
-                        <input type="text" id="register-name" required placeholder="Ej. Juan Pérez" class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <input type="text" id="register-name" required autocomplete="name" maxlength="80" placeholder="Ej. Juan Pérez" class="w-full pl-9 pr-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
                 </div>
                 <div>
@@ -120,7 +196,7 @@
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pointer-events-none">
                             <i data-lucide="mail" class="w-4 h-4"></i>
                         </span>
-                        <input type="email" id="register-email" required placeholder="usuario@universidad.edu.co" class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <input type="email" id="register-email" required autocomplete="email" inputmode="email" placeholder="usuario@universidad.edu.co" class="w-full pl-9 pr-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
                     </div>
                 </div>
                 <div>
@@ -129,7 +205,8 @@
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 pointer-events-none">
                             <i data-lucide="lock" class="w-4 h-4"></i>
                         </span>
-                        <input type="password" id="register-password" required minlength="4" placeholder="Mínimo 4 caracteres" class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <input type="password" id="register-password" required minlength="8" autocomplete="new-password" placeholder="Mínimo 8 caracteres" class="w-full pl-9 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        <button type="button" onclick="togglePassword('register-password', this)" aria-label="Mostrar contraseña" class="absolute inset-y-0 right-0 px-3 text-slate-400"><i data-lucide="eye" class="w-4 h-4"></i></button>
                     </div>
                 </div>
                 <button type="submit" class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-xs shadow-md transition-all transform active:scale-98">
@@ -179,7 +256,7 @@
                     <!-- User Info & Actions -->
                     <div class="flex items-center space-x-3">
                         <button onclick="openModal('transaction-modal')" class="bg-brand-600 hover:bg-brand-700 text-white px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center shadow-md shadow-brand-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
-                            <i data-lucide="plus" class="w-4 h-4 mr-1"></i> <span class="hidden sm:inline">Nuevo</span> Movimiento
+                            <i data-lucide="plus" class="w-4 h-4 mr-1"></i><span class="desktop-label">Nuevo Movimiento</span><span class="mobile-label hidden">Nuevo</span>
                         </button>
 
                         <button onclick="exportCSV()" class="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition" title="Exportar CSV (RF-08)">
@@ -201,24 +278,31 @@
             </div>
 
             <!-- Mobile Nav bar -->
-            <div class="md:hidden flex justify-around border-t border-slate-100 bg-white py-2 px-2 text-xs">
-                <button onclick="switchTab('dashboard')" class="flex flex-col items-center text-brand-600 p-1">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+            <div class="mobile-nav md:hidden flex justify-around border-t border-slate-100 bg-white py-2 px-2 text-xs">
+                <button data-mobile-tab="dashboard" onclick="switchTab('dashboard')" class="flex flex-col items-center text-brand-600 p-1">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i><span>Inicio</span>
                 </button>
-                <button onclick="switchTab('transactions')" class="flex flex-col items-center text-slate-500 p-1">
-                    <i data-lucide="arrow-left-right" class="w-5 h-5"></i> Movimientos
+                <button data-mobile-tab="transactions" onclick="switchTab('transactions')" class="flex flex-col items-center text-slate-500 p-1">
+                    <i data-lucide="arrow-left-right" class="w-5 h-5"></i><span>Movimientos</span>
                 </button>
-                <button onclick="switchTab('budgets')" class="flex flex-col items-center text-slate-500 p-1">
-                    <i data-lucide="pie-chart" class="w-5 h-5"></i> Presupuestos
+                <button data-mobile-tab="budgets" onclick="switchTab('budgets')" class="flex flex-col items-center text-slate-500 p-1">
+                    <i data-lucide="pie-chart" class="w-5 h-5"></i><span>Presupuesto</span>
                 </button>
-                <button onclick="switchTab('analytics')" class="flex flex-col items-center text-slate-500 p-1">
-                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Analytics
+                <button data-mobile-tab="analytics" onclick="switchTab('analytics')" class="flex flex-col items-center text-slate-500 p-1">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i><span>Análisis</span>
                 </button>
             </div>
         </header>
 
         <!-- Main Content Area -->
         <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
+            <div id="page-heading" class="flex items-end justify-between gap-4">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-[.16em] text-brand-600">Finanzas personales</p>
+                    <h1 id="page-title" class="text-3xl font-extrabold text-slate-900 mt-1">Resumen</h1>
+                    <p id="page-subtitle" class="text-sm text-slate-500 mt-1">Una vista clara de cómo va tu dinero.</p>
+                </div>
+            </div>
 
             <!-- ================= SECTION: DASHBOARD ================= -->
             <section id="view-dashboard" class="space-y-8">
@@ -290,6 +374,39 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Financial coach -->
+                <section class="grid grid-cols-1 lg:grid-cols-5 gap-5" aria-label="Coach financiero">
+                    <div class="lg:col-span-3 rounded-2xl bg-gradient-to-br from-indigo-950 via-slate-900 to-brand-900 p-6 sm:p-7 text-white shadow-lg relative overflow-hidden">
+                        <div class="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-blue-400/10 blur-2xl pointer-events-none"></div>
+                        <div class="relative">
+                            <div class="flex items-center gap-2 text-blue-200 text-xs font-semibold uppercase tracking-[.14em]"><i data-lucide="sparkles" class="w-4 h-4"></i> Tu coach financiero</div>
+                            <h2 class="text-xl sm:text-2xl font-bold mt-3">Una decisión útil para este mes</h2>
+                            <p id="coach-insight" class="text-sm text-slate-200 mt-2 max-w-2xl leading-relaxed">Agrega movimientos para recibir una recomendación personalizada.</p>
+                            <div class="mt-6 pt-5 border-t border-white/10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                                <div>
+                                    <p id="coach-week-label" class="text-xs text-slate-300">Ritmo semanal recomendado</p>
+                                    <p id="coach-weekly-limit" class="text-2xl font-bold mt-1">Configura tus presupuestos</p>
+                                </div>
+                                <button onclick="switchTab('budgets')" class="self-start sm:self-auto rounded-xl bg-white/10 hover:bg-white/15 px-4 py-2.5 text-xs font-semibold transition">Revisar presupuestos <span aria-hidden="true">→</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2 rounded-2xl bg-white border border-slate-200/80 p-6 shadow-sm flex flex-col justify-between">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-[.14em] text-brand-600">Meta de ahorro</p>
+                                <h2 id="goal-name" class="text-lg font-bold text-slate-900 mt-2">Tu próximo objetivo</h2>
+                            </div>
+                            <span class="rounded-xl bg-emerald-50 p-2.5 text-emerald-600"><i data-lucide="target" class="w-5 h-5"></i></span>
+                        </div>
+                        <div class="mt-5">
+                            <div class="flex justify-between items-baseline gap-2 text-xs"><span id="goal-progress-label" class="text-slate-500">Crea una meta y sigue tu avance</span><strong id="goal-progress-percent" class="text-slate-800">0%</strong></div>
+                            <div class="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-slate-100"><div id="goal-progress-bar" class="h-full rounded-full bg-emerald-500 transition-all duration-500" style="width:0%"></div></div>
+                        </div>
+                        <button onclick="openGoalModal()" class="mt-5 w-full rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 px-4 py-2.5 text-xs font-semibold text-slate-700 transition"><span id="goal-action-label">Crear mi meta</span></button>
+                    </div>
+                </section>
 
                 <!-- Recent Activity & Quick Preview -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -469,7 +586,7 @@
 
     <!-- Transaction Modal (Add / Edit) -->
     <div id="transaction-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200">
-        <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-md w-full mx-4 overflow-hidden transform scale-95 transition-transform duration-200">
+        <div class="modal-panel bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-md w-full mx-4 overflow-hidden transform scale-95 transition-transform duration-200">
             <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h3 id="modal-title" class="text-base font-bold text-slate-900">Nueva Transacción</h3>
                 <button onclick="closeModal('transaction-modal')" class="text-slate-400 hover:text-slate-600 p-1">
@@ -536,7 +653,7 @@
 
     <!-- Budget Modal -->
     <div id="budget-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200">
-        <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-md w-full mx-4 overflow-hidden transform scale-95 transition-transform duration-200">
+        <div class="modal-panel bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-md w-full mx-4 overflow-hidden transform scale-95 transition-transform duration-200">
             <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h3 class="text-base font-bold text-slate-900">Configurar Límites Mensuales</h3>
                 <button onclick="closeModal('budget-modal')" class="text-slate-400 hover:text-slate-600 p-1">
@@ -557,9 +674,34 @@
         </div>
     </div>
 
+    <!-- Savings goal modal -->
+    <div id="goal-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200" role="dialog" aria-modal="true" aria-labelledby="goal-modal-title">
+        <div class="modal-panel bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-md w-full mx-4 overflow-hidden transform scale-95 transition-transform duration-200">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <div><p class="text-xs font-semibold uppercase tracking-wider text-brand-600">Plan de ahorro</p><h3 id="goal-modal-title" class="text-base font-bold text-slate-900 mt-1">Tu meta</h3></div>
+                <button type="button" onclick="closeModal('goal-modal')" aria-label="Cerrar" class="text-slate-400 hover:text-slate-600 p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="goal-form" onsubmit="saveSavingsGoal(event)" class="p-6 space-y-4">
+                <div>
+                    <label for="goal-input-name" class="block text-xs font-semibold text-slate-600 mb-1">¿Para qué estás ahorrando?</label>
+                    <input id="goal-input-name" type="text" required maxlength="60" placeholder="Ej. Viaje, computador, fondo de emergencia" class="w-full px-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div><label for="goal-input-target" class="block text-xs font-semibold text-slate-600 mb-1">Monto de la meta</label><input id="goal-input-target" type="number" min="1" step="1000" required placeholder="0" class="w-full px-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm"></div>
+                    <div><label for="goal-input-saved" class="block text-xs font-semibold text-slate-600 mb-1">Ya tengo ahorrado</label><input id="goal-input-saved" type="number" min="0" step="1000" value="0" required placeholder="0" class="w-full px-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm"></div>
+                </div>
+                <p class="text-xs text-slate-500">Actualiza el ahorro acumulado cuando apartes dinero para esta meta.</p>
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal('goal-modal')" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-xl shadow-md">Guardar meta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Confirm Delete Modal -->
     <div id="confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200">
-        <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-sm w-full mx-4 p-6 text-center transform scale-95 transition-transform duration-200">
+        <div class="modal-panel bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-sm w-full mx-4 p-6 text-center transform scale-95 transition-transform duration-200">
             <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4">
                 <i data-lucide="trash-2" class="w-6 h-6"></i>
             </div>
@@ -584,8 +726,26 @@
         let currentUser = null;
         let userTransactions = [];
         let userBudgets = {};
+        let userGoal = null;
         let pieChartInstance = null;
         let barChartInstance = null;
+
+        function readJSON(key, fallback) {
+            try { return JSON.parse(localStorage.getItem(key) || 'null') ?? fallback; }
+            catch (error) { console.warn(`Datos locales inválidos para ${key}`, error); return fallback; }
+        }
+
+        function escapeHTML(value) {
+            return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+        }
+
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            input.type = input.type === 'password' ? 'text' : 'password';
+            button.setAttribute('aria-label', input.type === 'password' ? 'Mostrar contraseña' : 'Ocultar contraseña');
+            button.innerHTML = `<i data-lucide="${input.type === 'password' ? 'eye' : 'eye-off'}" class="w-4 h-4"></i>`;
+            lucide.createIcons();
+        }
 
         // INIT
         window.onload = function() {
@@ -614,9 +774,14 @@
         }
 
         function checkSession() {
-            const session = localStorage.getItem('finanzas_active_session');
+            const session = readJSON('finanzas_active_session', null);
             if (session) {
-                currentUser = JSON.parse(session);
+                if (!session.id || !session.name || !session.email) {
+                    localStorage.removeItem('finanzas_active_session');
+                    showAuthView();
+                    return;
+                }
+                currentUser = session;
                 loadUserData();
                 showAppView();
             } else {
@@ -630,7 +795,12 @@
             const email = document.getElementById('register-email').value.trim().toLowerCase();
             const password = document.getElementById('register-password').value;
 
-            const users = JSON.parse(localStorage.getItem('finanzas_users') || '[]');
+            if (name.length < 2 || password.length < 8) {
+                showToast('Ingresa tu nombre y una contraseña de al menos 8 caracteres.', 'warning');
+                return;
+            }
+            const storedUsers = readJSON('finanzas_users', []);
+            const users = (Array.isArray(storedUsers) ? storedUsers : []).filter(user => user && typeof user.email === 'string');
             if (users.some(u => u.email === email)) {
                 showToast('El correo ya se encuentra registrado.', 'error');
                 return;
@@ -647,6 +817,7 @@
             // Empty data for new user
             userTransactions = [];
             userBudgets = {};
+            userGoal = null;
             saveUserData();
 
             showToast('Cuenta creada exitosamente.', 'success');
@@ -659,7 +830,8 @@
             const email = document.getElementById('login-email').value.trim().toLowerCase();
             const password = document.getElementById('login-password').value;
 
-            const users = JSON.parse(localStorage.getItem('finanzas_users') || '[]');
+            const storedUsers = readJSON('finanzas_users', []);
+            const users = (Array.isArray(storedUsers) ? storedUsers : []).filter(user => user && typeof user.email === 'string');
             const user = users.find(u => u.email === email && u.password === password);
 
             if (!user) {
@@ -680,6 +852,7 @@
             currentUser = null;
             userTransactions = [];
             userBudgets = {};
+            userGoal = null;
             showToast('Sesión cerrada correctamente.', 'info');
             showAuthView();
         }
@@ -703,11 +876,15 @@
         // USER DATA STORAGE (PER USER)
         function loadUserData() {
             if (!currentUser) return;
-            const txData = localStorage.getItem(`finanzas_tx_${currentUser.id}`);
-            const budgetData = localStorage.getItem(`finanzas_budgets_${currentUser.id}`);
-
-            userTransactions = txData ? JSON.parse(txData) : [];
-            userBudgets = budgetData ? JSON.parse(budgetData) : {};
+            const storedTransactions = readJSON(`finanzas_tx_${currentUser.id}`, []);
+            userTransactions = (Array.isArray(storedTransactions) ? storedTransactions : []).filter(tx => tx && typeof tx.id === 'string' && ['ingreso', 'gasto'].includes(tx.type) && Number.isFinite(Number(tx.amount)));
+            userBudgets = readJSON(`finanzas_budgets_${currentUser.id}`, {});
+            if (!userBudgets || typeof userBudgets !== 'object' || Array.isArray(userBudgets)) userBudgets = {};
+            userBudgets = Object.fromEntries(Object.entries(userBudgets).filter(([category, value]) => CATEGORIES.includes(category) && Number.isFinite(Number(value)) && Number(value) >= 0).map(([category, value]) => [category, Number(value)]));
+            const storedGoal = readJSON(`finanzas_goal_${currentUser.id}`, null);
+            userGoal = storedGoal && typeof storedGoal.name === 'string' && Number(storedGoal.target) > 0
+                ? { name: storedGoal.name.slice(0, 60), target: Number(storedGoal.target), saved: Math.max(0, Number(storedGoal.saved) || 0) }
+                : null;
         }
 
         function saveUserData() {
@@ -719,6 +896,15 @@
         // NAVIGATION TABS
         function switchTab(tabId) {
             const tabs = ['dashboard', 'transactions', 'budgets', 'analytics'];
+            const pageCopy = {
+                dashboard: ['Resumen', 'Una vista clara de cómo va tu dinero.'],
+                transactions: ['Movimientos', 'Consulta y organiza tus ingresos y gastos.'],
+                budgets: ['Presupuestos', 'Define límites para mantener tus gastos bajo control.'],
+                analytics: ['Análisis', 'Explora cómo se distribuyen tus finanzas.']
+            };
+            const [title, subtitle] = pageCopy[tabId] || pageCopy.dashboard;
+            document.getElementById('page-title').textContent = title;
+            document.getElementById('page-subtitle').textContent = subtitle;
             tabs.forEach(tab => {
                 const view = document.getElementById(`view-${tab}`);
                 const button = document.getElementById(`tab-${tab}`);
@@ -730,6 +916,11 @@
                     if (button) button.classList.remove('tab-active');
                 }
             });
+            document.querySelectorAll('[data-mobile-tab]').forEach(button => {
+                button.classList.toggle('text-brand-600', button.dataset.mobileTab === tabId);
+                button.classList.toggle('text-slate-500', button.dataset.mobileTab !== tabId);
+                button.setAttribute('aria-current', button.dataset.mobileTab === tabId ? 'page' : 'false');
+            });
 
             if (tabId === 'analytics') renderCharts();
         }
@@ -737,6 +928,7 @@
         // MAIN RENDER
         function renderApp() {
             renderKPIs();
+            renderFinancialCoach();
             renderDashboardRecent();
             renderDashboardBudgetsPreview();
             renderFullTransactionsTable();
@@ -759,10 +951,105 @@
             return { income, expense, balance: income - expense };
         }
 
-        function getCategoryExpense(category) {
+        function getMonthKey(date = new Date()) {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        }
+
+        function getMonthlyTotals(monthKey = getMonthKey(), throughDay = null) {
+            const monthTransactions = userTransactions.filter(tx => {
+                const date = String(tx.date || '');
+                return date.slice(0, 7) === monthKey && (!throughDay || Number(date.slice(8, 10)) <= throughDay);
+            });
+            return {
+                income: monthTransactions.filter(tx => tx.type === 'ingreso').reduce((sum, tx) => sum + Number(tx.amount), 0),
+                expense: monthTransactions.filter(tx => tx.type === 'gasto').reduce((sum, tx) => sum + Number(tx.amount), 0)
+            };
+        }
+
+        function getCategoryExpense(category, monthKey = getMonthKey(), throughDay = null) {
             return userTransactions
-                .filter(t => t.type === 'gasto' && t.category === category)
-                .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+                .filter(t => t.type === 'gasto' && t.category === category && String(t.date || '').slice(0, 7) === monthKey && (!throughDay || Number(String(t.date).slice(8, 10)) <= throughDay))
+                .reduce((sum, t) => sum + Number(t.amount), 0);
+        }
+
+        function renderFinancialCoach() {
+            const currentMonth = getMonthKey();
+            const previousMonthDate = new Date();
+            previousMonthDate.setDate(1);
+            previousMonthDate.setMonth(previousMonthDate.getMonth() - 1);
+            const previousMonth = getMonthKey(previousMonthDate);
+            const dayOfMonth = new Date().getDate();
+            const { income, expense } = getMonthlyTotals(currentMonth, dayOfMonth);
+            const previousExpense = getMonthlyTotals(previousMonth, dayOfMonth).expense;
+            const categoryTotals = CATEGORIES.map(category => ({ category, current: getCategoryExpense(category, currentMonth, dayOfMonth), previous: getCategoryExpense(category, previousMonth, dayOfMonth) }));
+            const mostSpent = [...categoryTotals].sort((a, b) => b.current - a.current)[0];
+            const risingCategory = [...categoryTotals].sort((a, b) => (b.current - b.previous) - (a.current - a.previous))[0];
+            let insight = 'Cuando registres tus gastos, aquí encontrarás una recomendación basada en tus hábitos.';
+
+            if (expense > 0 && previousExpense > 0 && risingCategory && risingCategory.current > risingCategory.previous) {
+                const change = risingCategory.current - risingCategory.previous;
+                if (risingCategory.previous > 0) {
+                    const percent = Math.round(change / risingCategory.previous * 100);
+                    insight = `A esta fecha, en ${risingCategory.category} llevas ${formatCurrency(change)} más que a la misma fecha del mes pasado (${percent}% de aumento). Revisa tus movimientos recientes para encontrar dónde ajustar.`;
+                } else {
+                    insight = `Este mes ya registraste ${formatCurrency(risingCategory.current)} en ${risingCategory.category}; el mes pasado no hubo gastos en esa categoría a esta fecha. Revisa si es un gasto puntual o si conviene ajustar su presupuesto.`;
+                }
+            } else if (expense > 0 && previousExpense > 0 && expense < previousExpense) {
+                insight = `Vas gastando ${formatCurrency(previousExpense - expense)} menos que el mes pasado a esta fecha. Mantén el ritmo y prioriza tus gastos esenciales.`;
+            } else if (mostSpent && mostSpent.current > 0) {
+                const share = Math.round(mostSpent.current / expense * 100);
+                insight = `Tu categoría con más gastos es ${mostSpent.category}: ${formatCurrency(mostSpent.current)}, el ${share}% de tus gastos del mes. Revisa si el límite que le asignaste sigue siendo adecuado.`;
+            } else if (income > 0) {
+                insight = `Ya registraste ${formatCurrency(income)} en ingresos este mes. Agrega tus gastos para recibir recomendaciones más precisas.`;
+            }
+            document.getElementById('coach-insight').textContent = insight;
+
+            const monthlyBudget = Object.values(userBudgets).reduce((sum, value) => sum + Number(value || 0), 0);
+            const weekLabel = document.getElementById('coach-week-label');
+            const weekLimit = document.getElementById('coach-weekly-limit');
+            if (monthlyBudget > 0) {
+                const remaining = monthlyBudget - expense;
+                if (remaining <= 0) {
+                    weekLabel.textContent = 'Presupuesto mensual';
+                    weekLimit.textContent = `Excedido por ${formatCurrency(Math.abs(remaining))}`;
+                    weekLimit.className = 'text-xl sm:text-2xl font-bold mt-1 text-rose-300';
+                } else {
+                    const now = new Date();
+                    const daysLeft = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate() - now.getDate() + 1;
+                    const weeksLeft = Math.max(1, Math.ceil(daysLeft / 7));
+                    weekLabel.textContent = `Disponible por semana para el resto del mes · ${weeksLeft} ${weeksLeft === 1 ? 'semana' : 'semanas'}`;
+                    weekLimit.textContent = formatCurrency(remaining / weeksLeft);
+                    weekLimit.className = 'text-2xl font-bold mt-1';
+                }
+            } else {
+                weekLabel.textContent = 'Ritmo semanal recomendado';
+                weekLimit.textContent = 'Configura tus presupuestos';
+                weekLimit.className = 'text-lg sm:text-xl font-bold mt-1';
+            }
+
+            renderSavingsGoal();
+        }
+
+        function renderSavingsGoal() {
+            const name = document.getElementById('goal-name');
+            const label = document.getElementById('goal-progress-label');
+            const percentText = document.getElementById('goal-progress-percent');
+            const bar = document.getElementById('goal-progress-bar');
+            const action = document.getElementById('goal-action-label');
+            if (!userGoal) {
+                name.textContent = 'Tu próximo objetivo';
+                label.textContent = 'Crea una meta y sigue tu avance';
+                percentText.textContent = '0%';
+                bar.style.width = '0%';
+                action.textContent = 'Crear mi meta';
+                return;
+            }
+            const percent = Math.min(100, Math.round(userGoal.saved / userGoal.target * 100));
+            name.textContent = userGoal.name;
+            label.textContent = `${formatCurrency(userGoal.saved)} de ${formatCurrency(userGoal.target)}`;
+            percentText.textContent = `${percent}%`;
+            bar.style.width = `${percent}%`;
+            action.textContent = percent >= 100 ? 'Actualizar meta' : 'Editar meta';
         }
 
         function formatCurrency(amount) {
@@ -775,7 +1062,8 @@
 
         // KPIS RENDER
         function renderKPIs() {
-            const { income, expense, balance } = getTotals();
+            const { balance } = getTotals();
+            const { income, expense } = getMonthlyTotals();
 
             document.getElementById('kpi-balance').textContent = formatCurrency(balance);
             document.getElementById('kpi-income').textContent = formatCurrency(income);
@@ -821,10 +1109,10 @@
                 tr.className = 'hover:bg-slate-50/50 transition';
                 tr.innerHTML = `
                     <td class="py-3 px-2">
-                        <div class="font-semibold text-slate-800">${tx.note || tx.category}</div>
-                        <div class="text-xs text-slate-400">${tx.category}</div>
+                        <div class="font-semibold text-slate-800">${escapeHTML(tx.note || tx.category)}</div>
+                        <div class="text-xs text-slate-400">${escapeHTML(tx.category)}</div>
                     </td>
-                    <td class="py-3 px-2 text-xs text-slate-500">${tx.date}</td>
+                    <td class="py-3 px-2 text-xs text-slate-500">${escapeHTML(tx.date)}</td>
                     <td class="py-3 px-2 text-right font-bold ${isIncome ? 'text-emerald-600' : 'text-rose-600'}">
                         ${isIncome ? '+' : '-'}${formatCurrency(tx.amount)}
                     </td>
@@ -906,9 +1194,9 @@
                             ${isIncome ? 'Ingreso' : 'Gasto'}
                         </span>
                     </td>
-                    <td class="py-3.5 px-4 font-medium text-slate-700">${tx.category}</td>
-                    <td class="py-3.5 px-4 text-slate-500 text-xs">${tx.note || '-'}</td>
-                    <td class="py-3.5 px-4 text-xs text-slate-500">${tx.date}</td>
+                    <td class="py-3.5 px-4 font-medium text-slate-700">${escapeHTML(tx.category)}</td>
+                    <td class="py-3.5 px-4 text-slate-500 text-xs">${escapeHTML(tx.note || '-')}</td>
+                    <td class="py-3.5 px-4 text-xs text-slate-500">${escapeHTML(tx.date)}</td>
                     <td class="py-3.5 px-4 text-right font-bold ${isIncome ? 'text-emerald-600' : 'text-slate-900'}">
                         ${isIncome ? '+' : '-'}${formatCurrency(tx.amount)}
                     </td>
@@ -964,7 +1252,7 @@
             const date = document.getElementById('tx-date').value;
             const note = document.getElementById('tx-note').value.trim();
 
-            if (!amount || amount <= 0) {
+            if (!Number.isFinite(amount) || amount <= 0 || amount > 1000000000000) {
                 showToast('Ingresa un monto válido mayor a 0.', 'warning');
                 return;
             }
@@ -1231,9 +1519,9 @@
             }
 
             let csv = 'ID,Tipo,Monto,Categoria,Fecha,Nota\n';
+            const csvCell = value => `"${String(value ?? '').replace(/[\r\n]+/g, ' ').replace(/"/g, '""')}"`;
             userTransactions.forEach(t => {
-                const cleanNote = (t.note || '').replace(/,/g, ' ');
-                csv += `"${t.id}","${t.type}",${t.amount},"${t.category}","${t.date}","${cleanNote}"\n`;
+                csv += [t.id, t.type, Number(t.amount), t.category, t.date, t.note].map(csvCell).join(',') + '\n';
             });
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1244,8 +1532,32 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
 
             showToast('Archivo CSV descargado exitosamente.', 'success');
+        }
+
+        function openGoalModal() {
+            document.getElementById('goal-input-name').value = userGoal?.name || '';
+            document.getElementById('goal-input-target').value = userGoal?.target || '';
+            document.getElementById('goal-input-saved').value = userGoal?.saved || 0;
+            openModal('goal-modal');
+        }
+
+        function saveSavingsGoal(event) {
+            event.preventDefault();
+            const name = document.getElementById('goal-input-name').value.trim();
+            const target = Number(document.getElementById('goal-input-target').value);
+            const saved = Number(document.getElementById('goal-input-saved').value);
+            if (!name || !Number.isFinite(target) || target <= 0 || !Number.isFinite(saved) || saved < 0) {
+                showToast('Revisa el nombre y los montos de tu meta.', 'warning');
+                return;
+            }
+            userGoal = { name: name.slice(0, 60), target, saved };
+            localStorage.setItem(`finanzas_goal_${currentUser.id}`, JSON.stringify(userGoal));
+            closeModal('goal-modal');
+            renderSavingsGoal();
+            showToast(saved >= target ? '¡Meta alcanzada! Puedes actualizarla cuando quieras.' : 'Meta de ahorro guardada.', 'success');
         }
 
         // MODAL & TOAST HELPERS
@@ -1254,7 +1566,7 @@
             if (modalId === 'transaction-modal' && !document.getElementById('tx-id').value) {
                 document.getElementById('modal-title').textContent = 'Nueva Transacción';
                 document.getElementById('transaction-form').reset();
-                document.getElementById('tx-date').value = new Date().toISOString().split('T')[0];
+                document.getElementById('tx-date').value = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
             }
 
             const modal = document.getElementById(modalId);
@@ -1290,7 +1602,7 @@
             if (type === 'error') bg = 'bg-rose-600 text-white';
 
             toast.className = `${bg} px-4 py-3 rounded-xl shadow-xl text-xs font-semibold flex items-center space-x-2 pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-300`;
-            toast.innerHTML = `<span>${message}</span>`;
+            toast.textContent = message;
             
             container.appendChild(toast);
             setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);

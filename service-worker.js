@@ -1,49 +1,43 @@
-const CACHE_NAME = 'finanzas-app-v1';
-const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './manifest.json',
-  'https://cdn.jsdelivr.net/npm/chart.js'
-];
+const CACHE_NAME = 'finanzas-app-v2';
+const APP_SHELL = ['./', './index.html', './manifest.json'];
 
-// Instalación: Guardar recursos estáticos en caché
-self.addEventListener('install', (event) => {
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
-// Activación: Limpiar versiones antiguas de la caché
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(key => key.startsWith('finanzas-app-') && key !== CACHE_NAME).map(key => caches.delete(key))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', event => {
+  const request = event.request;
+  const url = new URL(request.url);
+  if (request.method !== 'GET') return;
+
+  if (request.mode === 'navigate' && url.origin === self.location.origin) {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put('./index.html', response.clone()));
+          return response;
         })
-      );
-    })
-  );
-  self.clients.claim();
-});
+        .catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
 
-// Estrategia de respuesta: Responder desde caché si no hay conexión
-self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
-      });
-    })
+    caches.match(request).then(cached => cached || fetch(request).then(response => {
+      if (response.ok || response.type === 'opaque') caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
+      return response;
+    }).catch(() => caches.match(request)))
   );
 });
