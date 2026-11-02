@@ -81,6 +81,7 @@
         .tab-button.tab-active { border-bottom-color: transparent; }
         .tab-button.tab-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px 2px 0 0; background: #2563eb; }
         .mobile-label { display: none; }
+        .logout-button { min-height: 40px; }
         #auth-view { background-image: radial-gradient(ellipse at 20% 15%, rgb(59 130 246 / .3), transparent 38%), linear-gradient(135deg, #0f172a, #172554 55%, #1e3a8a); }
         #auth-view > div { box-shadow: 0 32px 90px rgb(2 6 23 / .32); }
         #auth-view input { min-height: 46px; }
@@ -116,6 +117,8 @@
         }
         @media (max-width: 360px) {
             #app-view > header .mobile-label { display: none; }
+            .logout-button span { display: none; }
+            .logout-button { padding-left: .65rem; padding-right: .65rem; }
             #app-view > header > div:first-child { padding-left: .65rem; padding-right: .65rem; }
             #app-view > header > div:first-child > div > div:last-child { gap: .1rem; }
             #view-dashboard #kpi-balance { font-size: 1.55rem; }
@@ -269,8 +272,8 @@
                                 <p id="user-display-name" class="text-xs font-bold text-slate-800">Usuario</p>
                                 <p id="user-display-email" class="text-[10px] text-slate-400">correo@ejemplo.com</p>
                             </div>
-                            <button onclick="handleLogout()" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition" title="Cerrar Sesión">
-                                <i data-lucide="log-out" class="w-5 h-5"></i>
+                            <button onclick="handleLogout()" aria-label="Cerrar sesión" class="logout-button inline-flex items-center gap-1.5 px-2.5 py-2 text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-xl transition font-semibold text-xs shrink-0" title="Cerrar sesión">
+                                <i data-lucide="log-out" class="w-4 h-4"></i><span>Salir</span>
                             </button>
                         </div>
                     </div>
