@@ -59,7 +59,10 @@
             .mobile-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 35; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -8px 24px rgb(15 23 42 / .08); }
             .mobile-nav button { min-width: 0; flex: 1; font-size: 10px; }
             .mobile-nav button span { white-space: nowrap; }
-            .modal-panel { max-height: calc(100dvh - 2rem - env(safe-area-inset-top)); overflow-y: auto; }
+            .modal-panel { max-height: calc(100vh - 2rem - env(safe-area-inset-top)); overflow-y: auto; }
+            .modal-panel button { min-height: 44px; }
+            @supports (height: 100dvh) { .modal-panel { max-height: calc(100dvh - 2rem - env(safe-area-inset-top)); } }
+            #transaction-modal, #budget-modal, #goal-modal { align-items: flex-start; overflow-y: auto; padding: max(1rem, env(safe-area-inset-top)) 0; }
         }
         .tab-active {
             border-bottom: 2px solid #2563eb;
@@ -82,6 +85,7 @@
         .tab-button.tab-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px 2px 0 0; background: #2563eb; }
         .mobile-label { display: none; }
         .logout-footer-button { min-height: 44px; }
+        body.modal-open { overflow: hidden; }
         #auth-view { background-image: radial-gradient(ellipse at 20% 15%, rgb(59 130 246 / .3), transparent 38%), linear-gradient(135deg, #0f172a, #172554 55%, #1e3a8a); }
         #auth-view > div { box-shadow: 0 32px 90px rgb(2 6 23 / .32); }
         #auth-view input { min-height: 46px; }
@@ -108,11 +112,17 @@
             #view-transactions > div:first-child { padding: 1rem; }
             #view-transactions .overflow-x-auto { overscroll-behavior-x: contain; scrollbar-width: thin; }
             #view-transactions table { min-width: 690px; }
+            #view-transactions tbody button { min-width: 44px; min-height: 44px; }
             #view-dashboard .overflow-x-auto table { min-width: 440px; }
             #view-analytics .relative.h-64 { height: 14rem; }
             #budget-alerts-container > div { align-items: flex-start; gap: .75rem; padding: .85rem; }
             #budget-alerts-container > div > div { min-width: 0; }
             #budget-alerts-container button { flex-shrink: 0; }
+            input, select, textarea { font-size: 16px !important; }
+            .mobile-nav button { min-height: 44px; }
+            .mobile-add-button { position: fixed; right: 1rem; bottom: calc(4.85rem + env(safe-area-inset-bottom)); z-index: 34; min-height: 52px; box-shadow: 0 10px 28px rgb(37 99 235 / .35); transition: transform .18s ease, opacity .18s ease; }
+            .mobile-add-button.footer-visible { opacity: 0; pointer-events: none; transform: translateY(8px); }
+            #app-view > main { padding-bottom: calc(10rem + env(safe-area-inset-bottom)) !important; }
             footer { padding-bottom: calc(5rem + env(safe-area-inset-bottom)) !important; }
         }
         @media (max-width: 360px) {
@@ -256,11 +266,11 @@
 
                     <!-- User Info & Actions -->
                     <div class="flex items-center space-x-3">
-                        <button onclick="openModal('transaction-modal')" class="bg-brand-600 hover:bg-brand-700 text-white px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center shadow-md shadow-brand-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
+                        <button onclick="openModal('transaction-modal')" class="hidden md:flex bg-brand-600 hover:bg-brand-700 text-white px-3.5 py-2 rounded-xl text-xs font-semibold items-center shadow-md shadow-brand-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
                             <i data-lucide="plus" class="w-4 h-4 mr-1"></i><span class="desktop-label">Nuevo Movimiento</span><span class="mobile-label hidden">Nuevo</span>
                         </button>
 
-                        <button onclick="exportCSV()" class="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition" title="Exportar CSV (RF-08)">
+                        <button onclick="exportCSV()" aria-label="Exportar movimientos a CSV" class="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition" title="Exportar CSV (RF-08)">
                             <i data-lucide="download" class="w-5 h-5"></i>
                         </button>
 
@@ -274,6 +284,8 @@
                     </div>
                 </div>
             </div>
+
+        </header>
 
             <!-- Mobile Nav bar -->
             <div class="mobile-nav md:hidden flex justify-around border-t border-slate-100 bg-white py-2 px-2 text-xs">
@@ -290,7 +302,10 @@
                     <i data-lucide="bar-chart-3" class="w-5 h-5"></i><span>Análisis</span>
                 </button>
             </div>
-        </header>
+
+        <button onclick="openModal('transaction-modal')" class="mobile-add-button md:hidden inline-flex items-center gap-2 rounded-full bg-brand-600 hover:bg-brand-700 px-5 text-sm font-bold text-white" aria-label="Crear nuevo movimiento">
+            <i data-lucide="plus" class="w-5 h-5"></i><span>Nuevo movimiento</span>
+        </button>
 
         <!-- Main Content Area -->
         <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
@@ -502,6 +517,7 @@
                         <h3 class="text-base font-bold text-slate-900">Historial de Transacciones</h3>
                         <span id="filtered-count" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium">0 registros</span>
                     </div>
+                    <p class="sm:hidden px-4 py-2 text-[11px] text-slate-500 bg-slate-50 border-b border-slate-100">Desliza la tabla hacia un lado para ver todas las columnas <span aria-hidden="true">→</span></p>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm text-slate-600">
                             <thead class="bg-slate-50 text-xs font-semibold text-slate-400 uppercase border-b border-slate-100">
@@ -734,6 +750,7 @@
         let userGoal = null;
         let pieChartInstance = null;
         let barChartInstance = null;
+        let chartLayoutMobile = window.matchMedia('(max-width: 640px)').matches;
 
         function readJSON(key, fallback) {
             try { return JSON.parse(localStorage.getItem(key) || 'null') ?? fallback; }
@@ -756,6 +773,18 @@
         window.onload = function() {
             lucide.createIcons();
             checkSession();
+            const mobileAddButton = document.querySelector('.mobile-add-button');
+            const appFooter = document.querySelector('#app-view footer');
+            if ('IntersectionObserver' in window && mobileAddButton && appFooter) {
+                new IntersectionObserver(([entry]) => mobileAddButton.classList.toggle('footer-visible', entry.isIntersecting), { threshold: 0.05 }).observe(appFooter);
+            }
+            window.addEventListener('resize', () => {
+                const nextLayout = window.matchMedia('(max-width: 640px)').matches;
+                if (nextLayout !== chartLayoutMobile) {
+                    chartLayoutMobile = nextLayout;
+                    if (!document.getElementById('view-analytics').classList.contains('hidden')) renderCharts();
+                }
+            });
         };
 
         // AUTH FUNCTIONS
@@ -882,7 +911,9 @@
         function loadUserData() {
             if (!currentUser) return;
             const storedTransactions = readJSON(`finanzas_tx_${currentUser.id}`, []);
-            userTransactions = (Array.isArray(storedTransactions) ? storedTransactions : []).filter(tx => tx && typeof tx.id === 'string' && ['ingreso', 'gasto'].includes(tx.type) && Number.isFinite(Number(tx.amount)));
+            userTransactions = (Array.isArray(storedTransactions) ? storedTransactions : [])
+                .filter(tx => tx && typeof tx.id === 'string' && /^tx_[\w-]+$/.test(tx.id) && ['ingreso', 'gasto'].includes(tx.type) && Number.isFinite(Number(tx.amount)) && CATEGORIES.includes(tx.category) && /^\d{4}-\d{2}-\d{2}$/.test(tx.date))
+                .map(tx => ({ ...tx, amount: Number(tx.amount), note: typeof tx.note === 'string' ? tx.note : '' }));
             userBudgets = readJSON(`finanzas_budgets_${currentUser.id}`, {});
             if (!userBudgets || typeof userBudgets !== 'object' || Array.isArray(userBudgets)) userBudgets = {};
             userBudgets = Object.fromEntries(Object.entries(userBudgets).filter(([category, value]) => CATEGORIES.includes(category) && Number.isFinite(Number(value)) && Number(value) >= 0).map(([category, value]) => [category, Number(value)]));
@@ -1207,10 +1238,10 @@
                     </td>
                     <td class="py-3.5 px-6 text-center">
                         <div class="flex justify-center space-x-2">
-                            <button onclick="editTransaction('${tx.id}')" class="p-1.5 text-slate-400 hover:text-brand-600 hover:bg-slate-100 rounded-lg transition" title="Editar">
+                            <button onclick="editTransaction('${tx.id}')" aria-label="Editar movimiento" class="p-1.5 text-slate-400 hover:text-brand-600 hover:bg-slate-100 rounded-lg transition" title="Editar">
                                 <i data-lucide="pencil" class="w-4 h-4"></i>
                             </button>
-                            <button onclick="confirmDeleteTransaction('${tx.id}')" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Eliminar">
+                            <button onclick="confirmDeleteTransaction('${tx.id}')" aria-label="Eliminar movimiento" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Eliminar">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </div>
@@ -1478,7 +1509,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } }
+                        legend: { position: window.matchMedia('(max-width: 640px)').matches ? 'bottom' : 'right', labels: { boxWidth: 12, font: { size: 11 } } }
                     }
                 }
             });
@@ -1575,6 +1606,7 @@
             }
 
             const modal = document.getElementById(modalId);
+            document.body.classList.add('modal-open');
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
@@ -1590,6 +1622,7 @@
             modal.classList.add('opacity-0');
             setTimeout(() => {
                 modal.classList.add('hidden');
+                if (!document.querySelector('.fixed.inset-0.z-50:not(.hidden)')) document.body.classList.remove('modal-open');
                 if (modalId === 'transaction-modal') {
                     document.getElementById('tx-id').value = '';
                     document.getElementById('transaction-form').reset();
